@@ -13,7 +13,7 @@ export const Section: React.FC<SectionProps> = ({ id, className = '', children, 
   return (
     <section 
       id={id} 
-      className={`relative w-full scroll-mt-0 overflow-hidden border-b border-white/5 ${noPadding ? '' : 'py-24 md:py-32'} ${className}`}
+      className={`relative w-full scroll-mt-0 overflow-hidden border-b border-white/5 ${noPadding ? '' : 'py-32 md:py-40'} ${className}`}
     >
       {/* Technical Grid Background - Ultra Subtle */}
       {grid && (
@@ -45,17 +45,23 @@ export const Section: React.FC<SectionProps> = ({ id, className = '', children, 
   );
 };
 
-export const SectionHeader: React.FC<{ title: string; subtitle?: string; align?: 'left' | 'center'; light?: boolean }> = ({ 
+export const SectionHeader: React.FC<{ title: string; subtitle?: string; align?: 'left' | 'center'; light?: boolean; chapter?: string }> = ({ 
   title, 
   subtitle,
   align = 'left',
-  light = false
+  light = false,
+  chapter
 }) => {
   return (
-    <div className={`mb-20 ${align === 'center' ? 'text-center' : 'text-left pl-4 md:pl-0'}`}>
+    <div className={`mb-24 ${align === 'center' ? 'text-center' : 'text-left pl-4 md:pl-0'} relative`}>
+      {chapter && (
+        <div className="absolute -top-12 left-0 text-[10px] font-mono text-slate-700 tracking-widest">
+          {chapter}
+        </div>
+      )}
       <div className={`flex items-center gap-4 mb-4 ${align === 'center' ? 'justify-center' : 'justify-start'}`}>
         <span className="w-8 h-[2px] bg-accent-gold"></span>
-        <h2 className="text-[10px] font-mono font-bold tracking-[0.3em] text-accent-gold uppercase">
+        <h2 className="text-[10px] font-mono font-medium tracking-[0.3em] text-accent-gold uppercase">
           {title}
         </h2>
       </div>

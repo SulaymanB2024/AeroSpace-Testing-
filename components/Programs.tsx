@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Section, SectionHeader } from './ui/Section';
 import { motion } from 'framer-motion';
@@ -137,42 +138,44 @@ export const Programs: React.FC = () => {
         title={selectedProg?.code || ""}
         subtitle={selectedProg?.sector}
       >
-        <div className="space-y-8">
-          <img 
-            src={selectedProg?.image} 
-            alt={selectedProg?.code}
-            className="w-full h-64 md:h-80 object-cover grayscale"
-          />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              <div>
-                <h4 className="font-display uppercase tracking-widest text-xs text-accent-gold mb-2">The Challenge</h4>
-                <p className="text-slate-300 font-light">{selectedProg?.fullDetails?.challenge}</p>
+        {selectedProg && (
+          <div className="space-y-8">
+            <img 
+              src={selectedProg.image} 
+              alt={selectedProg.code}
+              className="w-full h-64 md:h-80 object-cover grayscale"
+            />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h4 className="font-display uppercase tracking-widest text-xs text-accent-gold mb-2">The Challenge</h4>
+                  <p className="text-slate-300 font-light">{selectedProg.fullDetails.challenge}</p>
+                </div>
+                <div>
+                  <h4 className="font-display uppercase tracking-widest text-xs text-white mb-2">Our Solution</h4>
+                  <p className="text-slate-300 font-light">{selectedProg.fullDetails.solution}</p>
+                </div>
+                <div>
+                  <h4 className="font-display uppercase tracking-widest text-xs text-accent-teal mb-2">Impact</h4>
+                  <p className="text-slate-300 font-light">{selectedProg.fullDetails.impact}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-display uppercase tracking-widest text-xs text-white mb-2">Our Solution</h4>
-                <p className="text-slate-300 font-light">{selectedProg?.fullDetails?.solution}</p>
-              </div>
-              <div>
-                <h4 className="font-display uppercase tracking-widest text-xs text-accent-teal mb-2">Impact</h4>
-                <p className="text-slate-300 font-light">{selectedProg?.fullDetails?.impact}</p>
-              </div>
-            </div>
 
-            <div className="lg:col-span-1 bg-white/5 p-6 border border-white/5 h-fit">
-              <h4 className="font-display uppercase tracking-widest text-xs text-white mb-4 border-b border-white/10 pb-2">Technical Stack</h4>
-              <ul className="space-y-3">
-                {selectedProg?.tech.map((t, i) => (
-                  <li key={i} className="flex justify-between items-center text-sm">
-                    <span className="text-slate-400">{t}</span>
-                    <span className="w-1.5 h-1.5 bg-accent-gold rounded-full" />
-                  </li>
-                ))}
-              </ul>
+              <div className="lg:col-span-1 bg-white/5 p-6 border border-white/5 h-fit">
+                <h4 className="font-display uppercase tracking-widest text-xs text-white mb-4 border-b border-white/10 pb-2">Technical Stack</h4>
+                <ul className="space-y-3">
+                  {selectedProg.tech.map((t, i) => (
+                    <li key={i} className="flex justify-between items-center text-sm">
+                      <span className="text-slate-400">{t}</span>
+                      <span className="w-1.5 h-1.5 bg-accent-gold rounded-full" />
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </Modal>
     </>
   );

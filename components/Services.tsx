@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Section, SectionHeader } from './ui/Section';
-import { ClipboardCheck, PackageCheck, Truck, Layers, ArrowRight, BarChart, Factory } from 'lucide-react';
+import { ClipboardCheck, PackageCheck, Truck, Layers, ArrowRight, RefreshCw, Box } from 'lucide-react';
 import { Modal } from './ui/Modal';
 import { motion } from 'framer-motion';
 
@@ -69,78 +70,156 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({ service, onClick }) => {
   );
 };
 
+// --- Visualizations ---
+
+const TraceabilityVisual = () => (
+  <div className="bg-space-950 p-6 border border-white/5 rounded-lg my-8">
+     <h5 className="text-[10px] font-mono uppercase text-slate-500 mb-6 tracking-widest">Digital Thread / Chain of Custody</h5>
+     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative">
+        <div className="absolute top-4 left-4 bottom-4 w-[2px] bg-white/10 md:w-full md:h-[2px] md:top-6 md:left-0 -z-0" />
+        
+        {[
+          { label: "Mill Source", sub: "Raw Material", active: true },
+          { label: "Manufacturer", sub: "Production", active: true },
+          { label: "Distributor", sub: "AFI Inspect", active: true },
+          { label: "Client", sub: "Installation", active: true }
+        ].map((step, i) => (
+          <div key={i} className="relative z-10 flex md:flex-col items-center gap-4 md:gap-2 bg-space-950 p-2 md:p-0">
+             <div className={`w-3 h-3 rounded-full border border-white/20 ${step.active ? 'bg-accent-gold shadow-[0_0_10px_rgba(212,175,55,0.5)]' : 'bg-space-950'}`} />
+             <div className="md:text-center">
+                <div className="text-xs font-bold text-white uppercase">{step.label}</div>
+                <div className="text-[9px] text-slate-500 font-mono uppercase">{step.sub}</div>
+             </div>
+          </div>
+        ))}
+     </div>
+  </div>
+);
+
+const VMIVisual = () => (
+  <div className="bg-space-950 p-8 border border-white/5 rounded-lg my-8 flex items-center justify-center">
+    <div className="relative w-48 h-48">
+       {/* Rotating Cycle */}
+       <svg className="w-full h-full animate-[spin_10s_linear_infinite] opacity-30" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="48" stroke="white" strokeWidth="1" strokeDasharray="10 5" fill="none" />
+       </svg>
+       
+       <div className="absolute inset-0 flex items-center justify-center">
+          <RefreshCw className="w-8 h-8 text-accent-teal" />
+       </div>
+       
+       {/* Nodes */}
+       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-space-950 px-2 py-1 text-[9px] font-mono text-white border border-white/20">SCAN</div>
+       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-space-950 px-2 py-1 text-[9px] font-mono text-white border border-white/20">RESTOCK</div>
+       <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-space-950 px-2 py-1 text-[9px] font-mono text-white border border-white/20">USAGE</div>
+       <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 bg-space-950 px-2 py-1 text-[9px] font-mono text-white border border-white/20">DATA</div>
+    </div>
+  </div>
+);
+
+const KittingVisual = () => (
+  <div className="bg-space-950 p-6 border border-white/5 rounded-lg my-8">
+     <h5 className="text-[10px] font-mono uppercase text-slate-500 mb-6 tracking-widest">BOM Consolidation</h5>
+     <div className="flex items-center justify-center gap-8">
+        <div className="space-y-2">
+           {[1,2,3].map((_, i) => (
+             <div key={i} className="flex items-center gap-2 opacity-60">
+                <div className="w-2 h-2 border border-white/50 rounded-full" />
+                <div className="w-16 h-2 bg-white/10 rounded-sm" />
+             </div>
+           ))}
+        </div>
+        <ArrowRight className="w-4 h-4 text-slate-500" />
+        <div className="w-16 h-20 border border-accent-gold/50 bg-accent-gold/5 flex items-center justify-center relative">
+           <Box className="w-6 h-6 text-accent-gold" />
+           <div className="absolute -bottom-4 text-[9px] font-mono text-accent-gold">KIT ID-01</div>
+        </div>
+     </div>
+  </div>
+);
+
+// --- Component ---
+
 const services = [
   {
-    id: "qc",
-    icon: <ClipboardCheck className="w-6 h-6" />,
     title: "Quality Control",
-    desc: "Every part inspected to AS9100 Rev D standards.",
-    points: ["AS9100 Rev D", "ISO 9001:2015", "Lot Traceability"],
+    desc: "Rigorous inspection protocols ensuring 100% defect-free delivery.",
+    icon: <ClipboardCheck className="w-8 h-8" />,
+    points: ["AS9100 Rev D Certified", "In-House Metrology", "Lot Traceability"],
     cta: "View QC Standards",
-    fullDetails: {
-      subtitle: "On-Time, Defect-Free",
-      description: "Our quality philosophy is simple: On time every time, defect free. All parts are inspected prior to shipment, with paperwork maintained at Aerospace Fasteners Inc. Our calibration equipment meets ANSI/NCSL Z540-1-1994 standards.",
-      features: [
-        { label: "Certification", value: "AS9100 Rev D" },
-        { label: "Certification", value: "ISO 9001:2015" },
-        { label: "Compliance", value: "ITAR Registered" },
-        { label: "Traceability", value: "100% Paperwork Retention" }
-      ]
-    }
+    content: (
+      <>
+        <h4 className="font-display font-medium text-white text-lg mb-4">Zero Compromise Assurance</h4>
+        <p className="text-slate-300 font-light leading-relaxed mb-6">
+          Our quality management system is the backbone of our operation. Every part that enters our facility is subjected to a rigorous inspection protocol before it is ever cleared for inventory. We maintain a digital thread for every fastener, ensuring that mill certifications, test reports, and plating certs are instantly retrievable.
+        </p>
+        <TraceabilityVisual />
+        <ul className="grid grid-cols-2 gap-4 mt-6">
+           <li className="text-sm text-slate-400 flex items-center gap-2"><div className="w-1 h-1 bg-accent-gold rounded-full" /> Keyence Optical Inspection</li>
+           <li className="text-sm text-slate-400 flex items-center gap-2"><div className="w-1 h-1 bg-accent-gold rounded-full" /> Zeiss CMM Validation</li>
+           <li className="text-sm text-slate-400 flex items-center gap-2"><div className="w-1 h-1 bg-accent-gold rounded-full" /> Hardness Testing</li>
+           <li className="text-sm text-slate-400 flex items-center gap-2"><div className="w-1 h-1 bg-accent-gold rounded-full" /> XRF Material Analysis</li>
+        </ul>
+      </>
+    )
   },
   {
-    id: "vmi",
-    icon: <Layers className="w-6 h-6" />,
     title: "VMI Programs",
-    desc: "Vendor Managed Inventory solutions.",
-    points: ["Barcode Managed", "Auto Replenish", "Bin Stocking"],
+    desc: "Vendor Managed Inventory solutions to optimize throughput.",
+    icon: <RefreshCw className="w-8 h-8" />,
+    points: ["Bin Management", "Auto-Replenishment", "Usage Analytics"],
     cta: "Discuss VMI Program",
-    fullDetails: {
-      subtitle: "Vendor Managed Inventory",
-      description: "Avoid downtime with our VMI programs. We manage your on-hand stock levels and replenishment using barcode-managed systems with full lot traceability. We support Bin Stocking, KAN-BAN, and Long Term Agreements (LTA).",
-      features: [
-        { label: "System", value: "Barcode Management" },
-        { label: "Types", value: "Bin Stocking, KAN-BAN" },
-        { label: "Contracts", value: "Long Term Agreements" },
-        { label: "Benefit", value: "Prevent Line Stoppage" }
-      ]
-    }
+    content: (
+      <>
+        <h4 className="font-display font-medium text-white text-lg mb-4">Streamlined Logistics</h4>
+        <p className="text-slate-300 font-light leading-relaxed mb-6">
+           Stop managing bins and start managing production. Our VMI programs place critical hardware directly at the point of use. Our team monitors consumption rates, manages min/max levels, and handles replenishment automatically—eliminating stockouts and reducing administrative overhead.
+        </p>
+        <VMIVisual />
+        <p className="text-sm text-slate-400 mt-4">
+           We offer full barcode integration and API connectivity to your existing ERP system for seamless billing and tracking.
+        </p>
+      </>
+    )
   },
   {
-    id: "kitting",
-    icon: <PackageCheck className="w-6 h-6" />,
     title: "Kitting Services",
-    desc: "Pre-bundled hardware for specific projects.",
-    points: ["Custom BOMs", "Project Specific", "Ready-to-Use"],
+    desc: "Custom BOM consolidation for efficient assembly lines.",
+    icon: <Layers className="w-8 h-8" />,
+    points: ["Custom Labeling", "BOM Logic", "Just-In-Time"],
     cta: "Request Kit Assessment",
-    fullDetails: {
-      subtitle: "Custom Kitting",
-      description: "Receive only the hardware you need, pre-bundled for specific assemblies. Our kitting service reduces handling time and simplifies your production line. We kit to your exact Bill of Materials (BOM).",
-      features: [
-        { label: "Accuracy", value: "BOM Matched" },
-        { label: "Packaging", value: "Custom Labeling" },
-        { label: "Efficiency", value: "Reduced Handling" },
-        { label: "Flexibility", value: "Any Volume" }
-      ]
-    }
+    content: (
+       <>
+         <h4 className="font-display font-medium text-white text-lg mb-4">Assembly-Ready Deliverables</h4>
+         <p className="text-slate-300 font-light leading-relaxed mb-6">
+            Reduce technician search time and FOD risk with custom kitting. We consolidate complete Bill of Materials (BOMs) into single-SKU packages, organized by assembly step or workstation.
+         </p>
+         <KittingVisual />
+         <ul className="space-y-2 mt-4">
+            <li className="text-sm text-slate-400">• Reduction in purchase orders processed</li>
+            <li className="text-sm text-slate-400">• Elimination of mixed stock and FOD</li>
+            <li className="text-sm text-slate-400">• Simplified receiving inspection</li>
+         </ul>
+       </>
+    )
   },
   {
-    id: "consignment",
-    icon: <Truck className="w-6 h-6" />,
     title: "Consignment",
-    desc: "Maintain on-site inventory, pay on use.",
-    points: ["Capital Efficiency", "Immediate Access", "Budget Friendly"],
+    desc: "On-site inventory maintenance to preserve working capital.",
+    icon: <Truck className="w-8 h-8" />,
+    points: ["Pay-On-Use", "Zero Lead Time", "Asset Management"],
     cta: "Start Consignment",
-    fullDetails: {
-      subtitle: "Consignment Inventory",
-      description: "Maintain on-site inventory while preserving working capital. Our consignment programs place the stock you need at your facility, billing you only when the product is consumed.",
-      features: [
-        { label: "Financial", value: "Preserve Capital" },
-        { label: "Access", value: "Immediate Availability" },
-        { label: "Billing", value: "Pay Per Use" },
-        { label: "Location", value: "On-Site Management" }
-      ]
-    }
+    content: (
+       <>
+         <h4 className="font-display font-medium text-white text-lg mb-4">Capital Efficiency</h4>
+         <p className="text-slate-300 font-light leading-relaxed mb-6">
+            Maintain the security of on-site stock without the balance sheet liability. Our consignment programs place Aerospace Fasteners-owned inventory in your facility. You are billed only when product is pulled for production.
+         </p>
+         <div className="p-4 bg-white/5 border-l-2 border-accent-gold">
+            <p className="text-sm text-white italic">"Inventory when you need it. Capital when you don't."</p>
+         </div>
+       </>
+    )
   }
 ];
 
@@ -148,54 +227,33 @@ export const Services: React.FC = () => {
   const [selectedService, setSelectedService] = useState<typeof services[0] | null>(null);
 
   return (
-    <Section id="services" className="bg-space-950 border-y border-white/5">
-      <SectionHeader title="Our Services" subtitle="Value-Added Solutions" />
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        {services.map((service, idx) => (
-          <SpotlightCard key={idx} service={service} onClick={() => setSelectedService(service)} />
-        ))}
-      </div>
+    <>
+      <Section id="services">
+        <SectionHeader 
+          chapter="03/06"
+          title="Operational Services" 
+          subtitle="Supply Chain Engineering" 
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map((service, idx) => (
+            <SpotlightCard 
+              key={idx} 
+              service={service} 
+              onClick={() => setSelectedService(service)} 
+            />
+          ))}
+        </div>
+      </Section>
 
       <Modal
         isOpen={!!selectedService}
         onClose={() => setSelectedService(null)}
         title={selectedService?.title || ""}
-        subtitle={selectedService?.fullDetails.subtitle}
+        subtitle="Service Detail"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-8">
-             <p className="text-slate-300 font-light leading-relaxed text-lg">
-               {selectedService?.fullDetails.description}
-             </p>
-             <div>
-               <h4 className="text-xs font-display font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
-                 <Factory className="w-4 h-4 text-accent-teal" /> Key Features
-               </h4>
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                 {selectedService?.fullDetails.features.map((feat, i) => (
-                   <div key={i} className="bg-white/5 border border-white/5 p-4">
-                     <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">{feat.label}</div>
-                     <div className="text-white font-medium text-sm">{feat.value}</div>
-                   </div>
-                 ))}
-               </div>
-             </div>
-          </div>
-          
-          <div className="flex items-center justify-center bg-space-950 border border-white/10 p-8">
-             <button 
-                onClick={() => {
-                  setSelectedService(null);
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full py-4 bg-accent-gold text-space-950 font-bold uppercase tracking-widest text-xs hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-lg"
-             >
-                Contact Us About {selectedService?.title} <ArrowRight className="w-4 h-4" />
-             </button>
-          </div>
-        </div>
+         {selectedService && selectedService.content}
       </Modal>
-    </Section>
+    </>
   );
 };

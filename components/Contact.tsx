@@ -1,16 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Section, SectionHeader } from './ui/Section';
-import { Send, MapPin, Phone, Mail, Radio, ShieldCheck, FileText, CheckCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Send, MapPin, Phone, Mail, CheckCircle, ArrowRight, Lock, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
 };
 
-const formVariants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
+const FacilityMap = () => (
+  <div className="relative w-full h-64 bg-space-900 border border-white/10 overflow-hidden group">
+    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity">
+       {/* Stylized Abstract Map of Palestine TX */}
+       <svg viewBox="0 0 400 200" className="w-full h-full" preserveAspectRatio="none">
+          <path d="M0 100 H400 M100 0 V200 M300 0 V200" stroke="white" strokeWidth="0.5" />
+          <path d="M50 0 L150 200 M350 0 L250 200" stroke="white" strokeWidth="0.5" />
+          <rect x="120" y="80" width="40" height="40" stroke="#D4AF37" strokeWidth="1" fill="none" />
+          <circle cx="140" cy="100" r="2" fill="#D4AF37" className="animate-pulse" />
+       </svg>
+    </div>
+    <div className="absolute bottom-4 left-4">
+      <div className="flex items-center gap-2 text-[10px] font-mono text-accent-gold uppercase tracking-widest bg-space-950/80 px-2 py-1 backdrop-blur-sm border border-accent-gold/20">
+         <MapPin className="w-3 h-3" /> Facility HQ
+      </div>
+    </div>
+  </div>
+);
+
+const LiveClock = () => {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2 text-slate-500 font-mono text-xs">
+      <Clock className="w-3 h-3" />
+      <span>{time.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit' })} CST (Palestine, TX)</span>
+    </div>
+  );
 };
 
 export const Contact: React.FC = () => {
@@ -29,121 +59,124 @@ export const Contact: React.FC = () => {
 
   return (
     <Section id="contact" className="pb-32">
-       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
          
          {/* Info Column */}
-         <motion.div variants={itemVariants} className="lg:col-span-5 space-y-12">
-            <SectionHeader title="Contact Us" subtitle="Get a Quote" />
+         <motion.div variants={itemVariants} className="lg:col-span-4 space-y-12">
+            <div>
+              <SectionHeader chapter="05/06" title="Contact" />
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">Start a Conversation</h2>
+              <p className="text-slate-400 font-light leading-relaxed text-lg mb-6">
+                Whether you need a specific part number or a full supply chain audit, our engineers are ready to assist.
+              </p>
+              <LiveClock />
+            </div>
             
-            <p className="text-slate-400 font-light leading-relaxed">
-              Customer service begins before you buy. Contact us for help selecting the right products and materials.
-            </p>
+            <FacilityMap />
             
-            <div className="space-y-8">
-              <div className="p-8 border border-white/5 bg-white/[0.02] relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4">
-                  <ShieldCheck className="w-12 h-12 text-white/5" />
+            <div className="space-y-6 pt-8 border-t border-white/10">
+              <div className="group flex items-start gap-4">
+                <div className="mt-1 text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity">
+                   <MapPin className="w-4 h-4" />
                 </div>
-                
-                <h4 className="text-[10px] font-mono text-accent-gold uppercase tracking-widest mb-6 border-b border-white/5 pb-2">Facility Data</h4>
-                
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <MapPin className="w-5 h-5 text-slate-500 mt-1" />
-                    <div>
-                      <h5 className="text-[11px] font-bold text-white font-display uppercase tracking-wider">Address</h5>
-                      <p className="text-sm text-slate-400 font-light mt-1 font-mono leading-relaxed">255 N US 287<br/>Palestine, TX 75803</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <FileText className="w-5 h-5 text-slate-500 mt-1" />
-                    <div>
-                      <h5 className="text-[11px] font-bold text-white font-display uppercase tracking-wider">Compliance</h5>
-                      <p className="text-sm text-slate-400 font-light mt-1 font-mono">
-                        Vernon Fritze<br/>Director of Compliance
-                      </p>
-                    </div>
-                  </div>
+                <div>
+                  <h5 className="text-xs font-bold text-white uppercase tracking-widest mb-1">Headquarters</h5>
+                  <p className="text-slate-400 font-light text-sm">
+                    255 N US 287, Palestine, TX 75803
+                  </p>
+                </div>
+              </div>
+              
+              <div className="group flex items-start gap-4">
+                <div className="mt-1 text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity">
+                   <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <h5 className="text-xs font-bold text-white uppercase tracking-widest mb-1">Direct Line</h5>
+                  <a href="tel:903-723-0693" className="text-slate-400 hover:text-white transition-colors text-sm">903-723-0693</a>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                 <a href="tel:903-723-0693" className="flex items-center justify-between p-6 border border-white/5 bg-space-900 hover:border-accent-gold transition-all group">
-                    <div>
-                       <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block mb-1">Phone</span>
-                       <span className="text-lg text-white font-display font-medium">903-723-0693</span>
-                    </div>
-                    <Phone className="w-5 h-5 text-slate-600 group-hover:text-accent-gold transition-colors" />
-                 </a>
-                 <div className="flex items-center justify-between p-6 border border-white/5 bg-space-900">
-                    <div>
-                       <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block mb-1">Fax</span>
-                       <span className="text-lg text-slate-300 font-display font-medium">903-723-3968</span>
-                    </div>
-                 </div>
-                 <a href="mailto:sales@afastinc.com" className="flex items-center justify-between p-6 border border-white/5 bg-space-900 hover:border-accent-gold transition-all group">
-                    <div>
-                       <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block mb-1">Email</span>
-                       <span className="text-lg text-white font-display font-medium">sales@afastinc.com</span>
-                    </div>
-                    <Mail className="w-5 h-5 text-slate-600 group-hover:text-accent-gold transition-colors" />
-                 </a>
+              <div className="group flex items-start gap-4">
+                <div className="mt-1 text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity">
+                   <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <h5 className="text-xs font-bold text-white uppercase tracking-widest mb-1">Sales & Support</h5>
+                  <a href="mailto:sales@afastinc.com" className="text-slate-400 hover:text-white transition-colors text-sm">sales@afastinc.com</a>
+                </div>
               </div>
             </div>
          </motion.div>
 
          {/* Form Column */}
-         <motion.div variants={formVariants} className="lg:col-span-7 bg-space-900 border border-white/10 p-8 md:p-12 relative">
-            {/* Decorative Corner Markers */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-accent-gold" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-accent-gold" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-accent-gold" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-accent-gold" />
-
-            <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-               <h4 className="text-xs font-mono text-white flex items-center gap-2">
-                  <Radio className="w-3 h-3 text-accent-red animate-pulse" />
-                  CONTACT FORM
-               </h4>
-               <span className="text-[9px] font-mono text-slate-600">SECURE CHANNEL</span>
+         <motion.div variants={itemVariants} className="lg:col-span-8">
+            <div className="flex items-center gap-2 mb-8 text-xs font-bold uppercase tracking-widest text-slate-500 border-b border-white/5 pb-4">
+               <Lock className="w-3 h-3" /> Secure Inquiry
             </div>
-
-            <form className="space-y-8" onSubmit={handleSubmit}>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <form className="space-y-12" onSubmit={handleSubmit}>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div className="group relative">
-                     <label className="text-[10px] font-mono text-slate-500 uppercase mb-2 block tracking-wider">Full Name</label>
-                     <input type="text" className="w-full bg-space-950 border-b border-white/20 p-3 text-white focus:outline-none focus:border-accent-gold transition-colors font-mono text-sm placeholder:text-slate-800" placeholder="ENTER NAME" required />
+                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Name</label>
+                     <input 
+                       type="text" 
+                       className="w-full bg-transparent border-b border-white/20 py-4 text-white focus:outline-none focus:border-white transition-all font-display text-lg placeholder:text-white/10" 
+                       placeholder="First Last" 
+                       required 
+                     />
+                     <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-accent-gold group-focus-within:w-full transition-all duration-500" />
                   </div>
                   <div className="group relative">
-                     <label className="text-[10px] font-mono text-slate-500 uppercase mb-2 block tracking-wider">Company</label>
-                     <input type="text" className="w-full bg-space-950 border-b border-white/20 p-3 text-white focus:outline-none focus:border-accent-gold transition-colors font-mono text-sm placeholder:text-slate-800" placeholder="COMPANY NAME" required />
+                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Company</label>
+                     <input 
+                       type="text" 
+                       className="w-full bg-transparent border-b border-white/20 py-4 text-white focus:outline-none focus:border-white transition-all font-display text-lg placeholder:text-white/10" 
+                       placeholder="Organization Name" 
+                       required 
+                     />
+                     <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-accent-gold group-focus-within:w-full transition-all duration-500" />
                   </div>
                </div>
                
                <div className="group relative">
-                  <label className="text-[10px] font-mono text-slate-500 uppercase mb-2 block tracking-wider">Email Address</label>
-                  <input type="email" className="w-full bg-space-950 border-b border-white/20 p-3 text-white focus:outline-none focus:border-accent-gold transition-colors font-mono text-sm placeholder:text-slate-800" placeholder="NAME@DOMAIN.COM" required />
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Email</label>
+                  <input 
+                    type="email" 
+                    className="w-full bg-transparent border-b border-white/20 py-4 text-white focus:outline-none focus:border-white transition-all font-display text-lg placeholder:text-white/10" 
+                    placeholder="name@company.com" 
+                    required 
+                  />
+                  <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-accent-gold group-focus-within:w-full transition-all duration-500" />
                </div>
 
                <div className="group relative">
-                  <label className="text-[10px] font-mono text-slate-500 uppercase mb-2 block tracking-wider">Message / Quote Details</label>
-                  <textarea rows={4} className="w-full bg-space-950 border border-white/10 p-4 text-white focus:outline-none focus:border-accent-gold transition-colors font-mono text-sm placeholder:text-slate-600 resize-none" placeholder="Please include part numbers, quantities, and specs..." required />
-                  <p className="mt-2 text-[10px] text-slate-500 font-mono">Typical response time: 2-4 hours</p>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Requirements</label>
+                  <textarea 
+                    rows={4} 
+                    className="w-full bg-transparent border-b border-white/20 py-4 text-white focus:outline-none focus:border-white transition-all font-sans text-base placeholder:text-white/10 resize-none leading-relaxed" 
+                    placeholder="Please include part numbers, quantities, and certifications required..." 
+                    required 
+                  />
+                  <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-accent-gold group-focus-within:w-full transition-all duration-500" />
+                  <p className="mt-4 text-sm text-slate-400">
+                    Typical response time: <span className="text-white font-medium">2-4 hours</span>. For AOG, please call directly.
+                  </p>
                </div>
 
-               <div className="pt-4">
+               <div className="flex justify-start pt-6">
                  <button 
                    type="submit" 
                    disabled={isSubmitting || isSent}
-                   className={`w-full py-4 font-display font-bold uppercase tracking-widest text-xs flex justify-center items-center gap-3 shadow-lg transition-all duration-300 ${isSent ? 'bg-green-600 text-white' : 'bg-white text-space-950 hover:bg-accent-gold hover:text-white'}`}
+                   className={`px-12 py-5 font-bold uppercase tracking-widest text-xs transition-all duration-300 flex items-center gap-3 ${
+                     isSent ? 'bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.3)]' : 'bg-white text-space-950 hover:bg-slate-200 shadow-lg'
+                   }`}
                  >
                     {isSubmitting ? (
-                      <span className="animate-pulse">Transmitting...</span>
+                      <span className="animate-pulse">Processing...</span>
                     ) : isSent ? (
-                      <>Sent Successfully <CheckCircle className="w-4 h-4" /></>
+                      <>Message Sent <CheckCircle className="w-4 h-4" /></>
                     ) : (
-                      <>Send Message <Send className="w-4 h-4" /></>
+                      <>Transmit Inquiry <ArrowRight className="w-4 h-4" /></>
                     )}
                  </button>
                </div>

@@ -1,24 +1,47 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import React, { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 const MoireVisual = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { scrollY } = useScroll();
+  const rotateScroll = useTransform(scrollY, [0, 1000], [0, 90]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    setMousePos({ 
+      x: (clientX / window.innerWidth - 0.5) * 15, 
+      y: (clientY / window.innerHeight - 0.5) * 15 
+    });
+  };
+
   return (
-    <div className="relative w-full h-[800px] flex items-center justify-center overflow-hidden pointer-events-none select-none mix-blend-screen opacity-60">
+    <div 
+      className="relative w-full h-[800px] flex items-center justify-center overflow-hidden pointer-events-auto mix-blend-screen opacity-60"
+      onMouseMove={handleMouseMove}
+    >
       
-      {/* Radial Interference 1 */}
+      {/* Slow Rotating Ring A - Reacts to Scroll */}
       <motion.div 
         className="absolute inset-0 flex items-center justify-center opacity-40"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
+        style={{ rotate: rotateScroll }}
+        animate={{ 
+          x: mousePos.x * -1,
+          y: mousePos.y * -1 
+        }}
+        transition={{ 
+          x: { type: "spring", stiffness: 50 },
+          y: { type: "spring", stiffness: 50 }
+        }}
       >
-        <svg viewBox="0 0 1000 1000" className="w-[160%] h-[160%]">
-          {Array.from({ length: 90 }).map((_, i) => (
+        <svg viewBox="0 0 1000 1000" className="w-[140%] h-[140%] animate-[spin_60s_linear_infinite]">
+          {Array.from({ length: 60 }).map((_, i) => (
             <line 
               key={i}
               x1="500" y1="500"
-              x2={500 + 800 * Math.cos(i * 4 * (Math.PI / 180))}
-              y2={500 + 800 * Math.sin(i * 4 * (Math.PI / 180))}
+              x2={500 + 800 * Math.cos(i * 6 * (Math.PI / 180))}
+              y2={500 + 800 * Math.sin(i * 6 * (Math.PI / 180))}
               stroke="white"
               strokeWidth="0.5"
             />
@@ -26,42 +49,34 @@ const MoireVisual = () => {
         </svg>
       </motion.div>
 
-      {/* Radial Interference 2 - Counter Rotating */}
+      {/* Counter Rotating Ring B */}
       <motion.div 
         className="absolute inset-0 flex items-center justify-center opacity-30"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 250, repeat: Infinity, ease: "linear" }}
+        animate={{ 
+          x: mousePos.x,
+          y: mousePos.y
+        }}
+        transition={{ 
+           x: { type: "spring", stiffness: 50 },
+           y: { type: "spring", stiffness: 50 }
+        }}
       >
-        <svg viewBox="0 0 1000 1000" className="w-[160%] h-[160%]">
-          {Array.from({ length: 120 }).map((_, i) => (
+        <svg viewBox="0 0 1000 1000" className="w-[140%] h-[140%] animate-[spin_80s_linear_infinite_reverse]">
+          {Array.from({ length: 80 }).map((_, i) => (
             <line 
               key={i}
               x1="500" y1="500"
-              x2={500 + 800 * Math.cos(i * 3 * (Math.PI / 180))}
-              y2={500 + 800 * Math.sin(i * 3 * (Math.PI / 180))}
+              x2={500 + 800 * Math.cos(i * 4.5 * (Math.PI / 180))}
+              y2={500 + 800 * Math.sin(i * 4.5 * (Math.PI / 180))}
               stroke="#D4AF37"
               strokeWidth="0.25"
             />
           ))}
         </svg>
       </motion.div>
-
-      {/* Central Geometric Structure */}
-      <div className="absolute inset-0 flex items-center justify-center">
-         <div className="w-[400px] h-[400px] rounded-full border border-white/10 flex items-center justify-center relative">
-            <motion.div 
-               animate={{ rotate: 360 }}
-               transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-               className="absolute inset-0 border-t border-r border-white/20 rounded-full"
-            />
-            <div className="w-[200px] h-[200px] rounded-full border border-white/5 flex items-center justify-center">
-               <div className="w-1 h-1 bg-white rounded-full" />
-            </div>
-         </div>
-      </div>
       
       {/* Vignette */}
-      <div className="absolute inset-0 bg-radial-gradient from-transparent via-space-950/40 to-space-950" />
+      <div className="absolute inset-0 bg-radial-gradient from-transparent via-space-950/60 to-space-950 pointer-events-none" />
     </div>
   );
 };
@@ -81,26 +96,26 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="flex items-center gap-4 mb-16"
+              className="flex items-center gap-4 mb-12"
             >
                <div className="w-1.5 h-1.5 bg-accent-gold" />
-               <span className="text-[10px] font-mono text-accent-gold uppercase tracking-[0.3em]">
+               <span className="text-[10px] font-mono text-accent-gold uppercase tracking-[0.2em]">
                  Est. 1979
                </span>
-               <div className="h-[1px] w-16 bg-white/10" />
-               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em]">
+               <div className="h-[1px] w-12 bg-white/10" />
+               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
                  Palestine, TX
                </span>
             </motion.div>
             
-            <div className="relative mb-12">
+            <div className="relative mb-10">
               <motion.h1 
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display font-medium text-6xl md:text-8xl lg:text-[7rem] text-white leading-[0.9] tracking-tighter mix-blend-difference"
+                className="font-display font-medium text-5xl md:text-7xl lg:text-[6.5rem] text-white leading-[0.9] tracking-tighter"
               >
-                Mission
+                Mission-
                 <br />
                 Critical
               </motion.h1>
@@ -108,9 +123,9 @@ export const Hero: React.FC = () => {
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="font-serif italic text-5xl md:text-7xl lg:text-[6rem] text-slate-500 leading-[1] mt-2 tracking-tight"
+                className="font-serif italic text-4xl md:text-6xl lg:text-[5.5rem] text-slate-500 leading-[1.0] mt-2 tracking-tight"
               >
-                Aerospace.
+                Aerospace Distribution.
               </motion.div>
             </div>
 
@@ -118,7 +133,7 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-base md:text-lg text-slate-400 font-light max-w-lg leading-relaxed mb-16 border-l border-white/10 pl-6"
+              className="text-lg text-slate-400 font-light max-w-lg leading-relaxed mb-12 pl-1"
             >
               Global logistics and precision inventory management for the world's most demanding flight programs.
             </motion.p>
@@ -130,17 +145,16 @@ export const Hero: React.FC = () => {
             >
               <button 
                 onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
-                className="group relative px-12 py-6 border border-white/20 text-white font-display font-bold uppercase tracking-[0.2em] text-xs hover:border-white transition-colors overflow-hidden"
+                className="px-10 py-5 bg-white text-space-950 font-display font-bold uppercase tracking-[0.15em] text-xs hover:bg-slate-200 transition-colors"
               >
-                <span className="relative z-10 group-hover:text-space-950 transition-colors">Browse Hardware Catalog</span>
-                <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
+                Access Inventory
               </button>
             </motion.div>
           </div>
 
           {/* Right Column / Kinetic Art */}
-          <div className="hidden lg:flex lg:col-span-6 h-[90vh] relative items-center justify-center overflow-hidden mix-blend-lighten pointer-events-none">
-             <div className="absolute right-[-10%] top-0 w-[120%] h-[120%]">
+          <div className="hidden lg:flex lg:col-span-6 h-[90vh] relative items-center justify-center overflow-hidden">
+             <div className="absolute right-[-20%] top-0 w-[140%] h-[140%]">
                <MoireVisual />
              </div>
           </div>
@@ -148,12 +162,10 @@ export const Hero: React.FC = () => {
         </div>
       </div>
       
-      {/* Interactive Bottom Bar */}
-      <div className="absolute bottom-0 left-0 w-full border-t border-white/10 bg-space-950/50 backdrop-blur-sm py-4 px-6 md:px-12 flex justify-center items-center z-30">
+      {/* Minimal Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
         <motion.div 
-          className="flex flex-col items-center gap-2 cursor-pointer opacity-50 hover:opacity-100 transition-opacity"
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-          whileHover={{ y: 5 }}
+          className="flex flex-col items-center gap-2 opacity-30"
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >

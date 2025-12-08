@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -12,7 +13,7 @@ import { Chatbot } from './components/Chatbot';
 import { Cursor } from './components/ui/Cursor';
 
 const GrainOverlay = () => (
-  <div className="fixed inset-0 pointer-events-none z-[30] opacity-[0.04] mix-blend-overlay select-none">
+  <div className="fixed inset-0 pointer-events-none z-[30] opacity-[0.03] mix-blend-overlay select-none">
     <div 
       className="absolute inset-0 w-full h-full"
       style={{
@@ -25,9 +26,9 @@ const GrainOverlay = () => (
 
 function App() {
   return (
-    <div className="min-h-screen bg-space-950 text-slate-200 overflow-x-hidden selection:bg-accent-gold/30 selection:text-white relative">
-      <GrainOverlay />
+    <div className="min-h-screen bg-space-950 text-slate-200 overflow-x-hidden selection:bg-accent-gold/30 selection:text-white relative cursor-none">
       <Cursor />
+      <GrainOverlay />
       <Navbar />
       <main className="relative z-10">
         <Hero />
@@ -45,3 +46,4 @@ function App() {
 }
 
 export default App;
+    

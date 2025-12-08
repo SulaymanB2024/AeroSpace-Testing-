@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Section, SectionHeader } from './ui/Section';
 import { ShieldCheck, Cpu, Flame, Layers, ArrowRight } from 'lucide-react';
@@ -141,38 +142,40 @@ export const Capabilities: React.FC = () => {
         title={selectedCap?.title || ""}
         subtitle="Technical Overview"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-           <div>
-             <h4 className="font-display uppercase tracking-widest text-sm text-white mb-4">Process Philosophy</h4>
-             <p className="text-slate-300 font-light leading-relaxed mb-8">
-               {selectedCap?.fullContent?.overview}
-             </p>
+        {selectedCap && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+             <div>
+               <h4 className="font-display uppercase tracking-widest text-sm text-white mb-4">Process Philosophy</h4>
+               <p className="text-slate-300 font-light leading-relaxed mb-8">
+                 {selectedCap.fullContent.overview}
+               </p>
+               
+               <h4 className="font-display uppercase tracking-widest text-sm text-white mb-4">Key Specifications</h4>
+               <div className="grid grid-cols-2 gap-4">
+                 {selectedCap.fullContent.specs.map((spec, i) => (
+                   <div key={i} className="p-4 bg-white/5 border border-white/5">
+                     <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{spec.label}</div>
+                     <div className="text-white font-mono text-sm">{spec.value}</div>
+                   </div>
+                 ))}
+               </div>
+             </div>
              
-             <h4 className="font-display uppercase tracking-widest text-sm text-white mb-4">Key Specifications</h4>
-             <div className="grid grid-cols-2 gap-4">
-               {selectedCap?.fullContent?.specs.map((spec, i) => (
-                 <div key={i} className="p-4 bg-white/5 border border-white/5">
-                   <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{spec.label}</div>
-                   <div className="text-white font-mono text-sm">{spec.value}</div>
-                 </div>
-               ))}
+             <div className="relative h-64 md:h-full bg-space-950 border border-white/10 flex items-center justify-center overflow-hidden">
+               {/* Abstract technical visualization placeholder */}
+               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e293b_0%,_#020408_100%)] opacity-50" />
+               <div className="grid grid-cols-6 grid-rows-6 gap-4 w-[150%] h-[150%] absolute animate-[spin_60s_linear_infinite] opacity-20">
+                 {Array.from({ length: 36 }).map((_, i) => (
+                   <div key={i} className="border border-white/10" />
+                 ))}
+               </div>
+               <div className="relative z-10 text-center">
+                 <div className="text-6xl text-white/10 font-display font-bold">SCHEMATIC</div>
+                 <div className="text-xs text-accent-gold font-mono mt-2">RESTRICTED DATA VIEW</div>
+               </div>
              </div>
-           </div>
-           
-           <div className="relative h-64 md:h-full bg-space-950 border border-white/10 flex items-center justify-center overflow-hidden">
-             {/* Abstract technical visualization placeholder */}
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e293b_0%,_#020408_100%)] opacity-50" />
-             <div className="grid grid-cols-6 grid-rows-6 gap-4 w-[150%] h-[150%] absolute animate-[spin_60s_linear_infinite] opacity-20">
-               {Array.from({ length: 36 }).map((_, i) => (
-                 <div key={i} className="border border-white/10" />
-               ))}
-             </div>
-             <div className="relative z-10 text-center">
-               <div className="text-6xl text-white/10 font-display font-bold">SCHEMATIC</div>
-               <div className="text-xs text-accent-gold font-mono mt-2">RESTRICTED DATA VIEW</div>
-             </div>
-           </div>
-        </div>
+          </div>
+        )}
       </Modal>
     </>
   );

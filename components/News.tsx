@@ -54,7 +54,7 @@ export const News: React.FC = () => {
 
   return (
     <Section id="news">
-      <SectionHeader title="Latest News" subtitle="Industry Updates" />
+      <SectionHeader chapter="04/06" title="Latest News" subtitle="Industry Updates" />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10">
         {articles.map((article, idx) => (
@@ -92,32 +92,34 @@ export const News: React.FC = () => {
         title={selectedArticle?.category || ""}
         subtitle="News Update"
       >
-        <div className="max-w-3xl mx-auto">
-           <div className="border-b border-white/10 pb-6 mb-8">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6 leading-tight">
-                {selectedArticle?.title}
-              </h2>
-              <div className="flex flex-wrap gap-6 text-sm text-slate-500 font-mono">
-                 <div className="flex items-center gap-2">
-                   <Calendar className="w-4 h-4" /> {selectedArticle?.date}
-                 </div>
-              </div>
-           </div>
-           
-           <div className="font-serif text-lg text-slate-300 leading-relaxed space-y-6">
-              {selectedArticle?.content.body.map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
-              ))}
-           </div>
-           
-           {selectedArticle?.content.link && (
-             <div className="mt-8">
-                <a href={selectedArticle.content.link} target="_blank" rel="noreferrer" className="text-accent-gold hover:text-white transition-colors underline text-sm">
-                   View Machine-Readable Files
-                </a>
+        {selectedArticle && (
+          <div className="max-w-3xl mx-auto">
+             <div className="border-b border-white/10 pb-6 mb-8">
+                <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6 leading-tight">
+                  {selectedArticle.title}
+                </h2>
+                <div className="flex flex-wrap gap-6 text-sm text-slate-500 font-mono">
+                   <div className="flex items-center gap-2">
+                     <Calendar className="w-4 h-4" /> {selectedArticle.date}
+                   </div>
+                </div>
              </div>
-           )}
-        </div>
+             
+             <div className="font-serif text-lg text-slate-300 leading-relaxed space-y-6">
+                {selectedArticle.content.body.map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+             </div>
+             
+             {selectedArticle.content.link && (
+               <div className="mt-8">
+                  <a href={selectedArticle.content.link} target="_blank" rel="noreferrer" className="text-accent-gold hover:text-white transition-colors underline text-sm">
+                     View Machine-Readable Files
+                  </a>
+               </div>
+             )}
+          </div>
+        )}
       </Modal>
     </Section>
   );
